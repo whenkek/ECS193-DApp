@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+        <link rel="import" href="view/landing.html">
+        <link rel="import" href="view/insertPatient.html">
+    </head>
+    <body>
+        <div class="nav">
+            <header class="nav-header">
+                <h1 class="nav-title">Application</h1>
+            </header>
+            <button type="button" id="button-landing" data-section="landing" class="nav-button">Landing</button>
+            <button type="button" id="button-insert-patient" data-section="insert-patient" class="nav-button">Insert Patient</button>
+        </div>
+
+        <div class="content">
+        </div>
+    </body>
+    <script>
+        require('./assets/imports');
+        require('./assets/navHandler');
+    </script>
+</html>

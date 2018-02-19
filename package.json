@@ -1,0 +1,17 @@
+{
+  "name": "ecs193-dapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "nmng",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.8.2"
+  },
+  "devDependencies": {
+    "electron-settings": "^3.1.4"
+  }
+}

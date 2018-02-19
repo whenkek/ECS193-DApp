@@ -1,0 +1,17 @@
+<template class="task-template">
+    <section id="section-insert-patient" class="section js-section">
+        <header>
+            <h1>Insert Patient</h1>
+        </header>
+        <div>
+            <form id="insert-form">
+                Doctor's Name: <input type="text" name="doctor-name"><br>
+                Some Parameter: <input type="number" name="param"><br>
+            </form>
+            <button id="insert-patient">Insert</button>
+        </div>
+        <script>
+            require('./src/insertPatient');
+        </script>
+    </section>
+</template>
