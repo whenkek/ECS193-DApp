@@ -4,32 +4,25 @@ var poster = require('./poster');
 
 var {ipcRenderer} = electron;
 
-var insertBtn = document.getElementById('insert-patient');
-var form = document.getElementById('insert-patient-form');
+var insertBtn = document.getElementById('insert-doctor');
+var form = document.getElementById('insert-doctor-form');
 
 insertBtn.addEventListener('click', function (event)
 {
     event.preventDefault();
     var fDocName = form[0].value;
-    var fParamVal = form[1].value;
     if (fDocName == '')
     {
         console.log('Must enter a doctor\'s name');
         return;
     }
-    if (fParamVal == '')
-    {
-        console.log('Param is not a valid number!');
-        return;
-    }
 
     //Time to POST!! Woo!!
     var postobj = {
-        doctor: fDocName,
-        param: fParamVal
+        name: fDocName
     };
-    //console.log('Posting \'' + postobj + '\'');
-    poster.post(postobj, '/insert/patient', InsertCallback);
+    console.log('Posting \'' + postobj + '\'');
+    poster.post(postobj, '/insert/doctor', InsertCallback);
 });
 
 function InsertCallback (res)
@@ -39,7 +32,7 @@ function InsertCallback (res)
     res.setEncoding('utf8');
     res.on('data', function (body) {
         //console.log('Body: ' + body);
-        var resDiv = document.getElementById('insert-patient-response');
+        var resDiv = document.getElementById('insert-doctor-response');
         resDiv.innerHTML = body;
     });
 }

@@ -1,22 +1,16 @@
-var http = require('http');
+var https = require('https');
 
-function post (postobj, postpath)
+function post (postobj, postpath, callback)
 {
+    var response = '';
     var options = {
-        hostname: 'majestic-legend.requestcatcher.com',
-        port: 80,
+        hostname: 'majestic-legend-193620.appspot.com',
+        port: 443,
         path: postpath,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     };
-    var req = http.request(options, function(res) {
-        console.log('Status: ' + res.statusCode);
-        console.log('Headers: ' + JSON.stringify(res.headers));
-        res.setEncoding('utf8');
-        res.on('data', function (body) {
-            console.log('Body: ' + body);
-        });
-    });
+    var req = https.request(options, callback);
     req.on('error', function(err) {
         console.log('problem with request: ' + err.message);
     });
