@@ -18,7 +18,6 @@ document.body.addEventListener('click', function (event) {
 
         //Display section
         var sectionID = 'section-' + event.target.dataset.section;
-        console.log(sectionID);
         document.getElementById(sectionID).classList.add('is-shown');
     }
 });
