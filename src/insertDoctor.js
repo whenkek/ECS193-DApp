@@ -1,6 +1,5 @@
 var electron = require('electron');
-var querystring = require('querystring');
-var poster = require('./poster');
+var poster = require('./utils/poster');
 
 var {ipcRenderer} = electron;
 

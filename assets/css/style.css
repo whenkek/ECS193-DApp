@@ -7,6 +7,7 @@
     --color-link:     hsl(0,0%,22%);
     --color-border:   hsl(0,0%,88%);
     --color-bg:       hsl(0,0%,96%);
+    --color-navhover: hsl(0,0%,80%);
     --color-accent:   black;
 }
 
@@ -65,7 +66,7 @@ html {
     background-color: hsla(0, 0%, 0%, 0.1);
 }
 .nav-button.is-selected {
-    background-color: var(--color-accent);
+    background-color: var(--color-navhover);
 }
 .nav-button.is-selected:focus {
     opacity: 0.8;
@@ -98,4 +99,25 @@ html {
     opacity: 1;
     transform: translateX(0);
     transition: visibility 0s 0s linear , opacity .36s ease-out, transform .36s ease-out;
+}
+
+/*Patient Graph*/
+
+table#graph-patient-table {
+    width: 100%;
+    border: 1px solid var(--color-border);
+}
+
+table#graph-patient-table th {
+    text-align: left;
+    padding: 3px;
+}
+
+table#graph-patient-table td {
+    text-align: left;
+    padding: 3px;
+}
+
+table#graph-patient-table tr:nth-child(even) {
+    background-color: var(--color-bg);
 }

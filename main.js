@@ -1,8 +1,9 @@
-var electron = require('electron');
-var path = require('path');
-var url = require('url');
+const electron = require('electron');
+const settings = require('electron-settings');
+const path = require('path');
+const url = require('url');
 
-var {app, BrowserWindow, Menu} = electron;
+const { app, BrowserWindow, Menu } = electron;
 
 app.setName('Electron Test');
 
@@ -10,9 +11,17 @@ var win = null;
 
 app.on('ready', function ()
 {
+    settings.set('accessToken', '');
+    settings.set('refreshToken', '');
+    settings.set('email', 'NULL');
+    settings.set('accType', '');
+    settings.set('name', '');
+
     win = new BrowserWindow({
         width: 1080,
         height: 720,
+        minWidth: 720,
+        minHeight: 600, 
         title: app.getName()
     });
     win.loadURL(url.format({
@@ -25,11 +34,13 @@ app.on('ready', function ()
     var menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 
-    //if (process.env.NODE_ENV != 'production')
-    //    win.toggleDevTools();
-
     win.on('closed', function()
     {
+        settings.set('accessToken', '');
+        settings.set('refreshToken', '');
+        settings.set('email', 'NULL');
+        settings.set('accType', '');
+        settings.set('name', '');
         app.quit();
     });
 });

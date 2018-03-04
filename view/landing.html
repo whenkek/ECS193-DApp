@@ -1,10 +1,15 @@
-<template class="task-template">
+<template class="task-template-landing">
     <section id="section-landing" class="section js-section is-shown">
         <header>
             <h1>Landing</h1>
         </header>
+        <div id="div-landing-login">
+            <button id="button-oauth-signin">Sign In with Google</button>
+            <button id="button-test-email">Test Email</button>
+        </div>
         <script>
-            
+            var login = require('./src/login.js');
+            login.bindButtons();
         </script>
     </section>
 </template>
