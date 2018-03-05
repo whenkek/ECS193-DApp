@@ -21,7 +21,7 @@ function bindButtons ()
 
 function signIn ()
 {
-    settings.set('clientID', '671445578517-ju2jvd1beiofp9qqddn3cn6ai1dehmru.apps.googleusercontent.com');
+    settings.set('clientID', '671445578517-io87npos82nmk6bk24ttgikc9h4uls4l.apps.googleusercontent.com');
     var config = {
         clientId: settings.get('clientID'),
         authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
@@ -39,7 +39,7 @@ function signIn ()
     }
 
     const options = {
-        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/gmail.send',
+        scope: 'https://www.googleapis.com/auth/userinfo.email',
         accessType: 'offline'
     };
 
@@ -55,10 +55,15 @@ function signIn ()
                 myApiOauth.refreshToken(token.refresh_token)
                     .then(function (newToken) {
                         //use your new token
+                        console.log(newToken);
                         settings.set('accessToken', newToken.access_token);
     
                         var token = { idToken: newToken.id_token };
                         poster.post(token, '/check/token', tokenCB);
+
+                        var testObj = [];
+                        testObj[newToken.access_token] = 'yes';
+                        console.log(testObj);
                     });
             });
     }
@@ -89,61 +94,55 @@ function testEmail ()
         return;
     }
 
-    var w = 800;
-    var h = 600;
-
-    verifyWindow = new BrowserWindow({
-        width: w,
-        height: h,
-        minWidth: w,
-        minHeight: h,
-        maxWidth: w,
-        maxHeight: h,
-        alwaysOnTop: true,
-        autoHideMenuBar: true
-    });
-    verifyWindow.loadURL(url.format({
-        pathname: path.join(__dirname, '/../view/popups/emailSend.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-    verifyWindow.show();
-    verifyWindow.on('closed', function()
-    {
-        verifyWindow = null;
-    });
-}
-
-var emailEvent = null;
-ipc.on('email-send-verify', function (event, arg) {
-    //console.log(arg);
-
-    emailEvent = event;
-
-    var transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth : {
-            user: settings.get('email'),
-            pass: arg
-        }
-    });
-
     var mailOptions = {
-        from: '"' + settings.get('name') + '" <' + settings.get('email') + '>',
-        to: 'huhuang@ucdavis.edu',
+        recipients: [{'Email':'Nicholas.Michael.Ng@gmail.com', 'Name':'Nicholas Ng'}],
         subject: 'Account Activation',
+        text: '',
         html: 'Account activation link would go <a href="www.google.com">here</a>.'
     };
 
-    transporter.sendMail(mailOptions, function (err, info) {
-        arg = null;
-        if (err)
-            emailEvent.sender.send('email-send-verify-response', 'Error');
-        else
-            emailEvent.sender.send('email-send-verify-response', 'Success');
-    });
-});
+    var postObj = {
+        mailOptions: mailOptions,
+        accessToken: settings.get('accessToken')
+    };
+
+    var validateTokenLink = '/oauth2/v1/tokeninfo?access_token=' + settings.get('accessToken');
+    poster.postWithHost({}, 'www.googleapis.com', validateTokenLink, tokenValidateForEmail);
+
+    function tokenValidateForEmail (res)
+    {
+        res.setEncoding('utf8');
+        res.on('data', function (body) {
+            var gRet = JSON.parse(body);
+            console.log(gRet);
+            var flag = gRet.hasOwnProperty('error');
+            if (!flag)
+                if (gRet.expires_in < 10)
+                    flag = true;
+
+            if (flag)
+            {
+                myApiOauth.refreshToken(settings.get('refreshToken'))
+                    .then(function (newToken) {
+                        settings.set('accessToken', newToken.access_token);
+                        postObj.accessToken = settings.get('accessToken');
+                        poster.post(postObj, '/token/sendEmail', emailCB)
+                    });
+            }
+            else
+            {
+                poster.post(postObj, '/token/sendEmail', emailCB)
+            }
+        });
+    }
+
+    function emailCB (res) 
+    {
+        res.setEncoding('utf8');
+        res.on('data', function (body) {
+            console.log(body);
+        });
+    }
+}
 
 module.exports.bindButtons = bindButtons;
